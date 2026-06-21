@@ -1,0 +1,81 @@
+version: '3.9'
+
+# ─────────────────────────────────────────────────────────────────────────
+# This compose file gives you PostgreSQL + Redis with ZERO manual installs.
+# Just run: docker compose up -d
+#
+# By default it only starts the two infra services (postgres, redis) —
+# you run the backend and frontend yourself with `npm run dev` in VS Code
+# so you get hot-reload and can debug normally. If you'd rather containerize
+# the whole app too, see the commented-out `backend` and `frontend` services
+# at the bottom.
+# ─────────────────────────────────────────────────────────────────────────
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: seatlock-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: seatlock
+      POSTGRES_PASSWORD: seatlock_password
+      POSTGRES_DB: seatlock
+    ports:
+      - '5432:5432'
+    volumes:
+      - seatlock_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U seatlock']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: seatlock-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - seatlock_redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Optional: a free web UI to inspect your Postgres data visually.
+  # Visit http://localhost:5050 (login: admin@seatlock.app / admin)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: seatlock-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@seatlock.app
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    profiles: ['tools'] # only starts with `docker compose --profile tools up`
+
+volumes:
+  seatlock_pg_data:
+  seatlock_redis_data:
+
+# ── Uncomment below if you want the backend/frontend containerized too ──
+#
+#  backend:
+#    build: ./backend
+#    ports: ['4000:4000']
+#    env_file: ./backend/.env
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#
+#  frontend:
+#    build: ./frontend
+#    ports: ['5173:5173']
+#    depends_on: [backend]

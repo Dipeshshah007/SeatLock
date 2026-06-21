@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-docker",
+    "cweijan.vscode-postgresql-client2",
+    "bradlc.vscode-tailwindcss",
+    "eamodio.gitlens",
+    "rangav.vscode-thunder-client"
+  ]
+}

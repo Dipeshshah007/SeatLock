@@ -1,0 +1,24 @@
+{
+  "name": "seatlock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SeatLock — Event Ticketing with Concurrency-Safe Seat Booking",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "dev": "concurrently -n BACKEND,FRONTEND -c blue,magenta \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "migrate": "npm run migrate:up --prefix backend",
+    "seed": "npm run seed --prefix backend",
+    "test:backend": "npm test --prefix backend",
+    "build:backend": "npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "setup": "npm run install:all && npm run docker:up && echo 'Waiting for Postgres to be ready...' && sleep 5 && npm run migrate && npm run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
