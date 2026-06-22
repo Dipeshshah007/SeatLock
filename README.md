@@ -14,7 +14,7 @@ SeatLock solves this with **two complementary concurrency-control layers**, each
 
 | Layer | Mechanism | What it guarantees |
 |---|---|---|
-| **PostgreSQL** | `SELECT ... FOR UPDATE` row-level locking inside ACID transactions, plus a `UNIQUE(event_id, seat_id)` constraint | **Correctness.** It is *structurally impossible* for two transactions to simultaneously hold/confirm the same seat — the second transaction blocks until the first commits or rolls back. This is the actual source of truth. |
+| **PostgreSQL** | `SELECT ... FOR UPDATE` row-level locking inside ACID transactions, plus a `UNIQUE(event_id, seat_id)` constraint | **Correctness.** It is structurally impossible for two transactions to simultaneously hold/confirm the same seat — the second transaction blocks until the first commits or rolls back. This is the actual source of truth. |
 | **Redis** | TTL key (`seat-hold:<id>`, 5-minute expiry) set alongside every Postgres hold | **Fast, cheap "soft hold" UX** — lets the frontend show a live countdown without expensive timestamp scans on every page load. If Redis goes down, Postgres still enforces correctness; we just temporarily lose the nice countdown. |
 | **Cron sweep job** | Runs every 30s, uses `SELECT ... FOR UPDATE SKIP LOCKED` | **Safety net.** Catches any seat stuck in `HELD` whose hold expired — even if Redis missed an event or the app crashed mid-checkout. |
 
@@ -33,11 +33,6 @@ SeatLock solves this with **two complementary concurrency-control layers**, each
 | IDE | VS Code 
 
 ## 4. Setup Instructions (Step by Step)
-
-### Prerequisites
-- Node.js 20+ (LTS) — https://nodejs.org
-- Docker Desktop (for Postgres + Redis — no manual DB install needed) — https://www.docker.com/products/docker-desktop/
-- Git — https://git-scm.com/
 
 ### Step 1 — Clone and install
 ```bash
