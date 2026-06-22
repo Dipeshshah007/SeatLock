@@ -22,19 +22,19 @@ SeatLock solves this with **two complementary concurrency-control layers**, each
 
 | Layer | Choice | Why |
 |---|---|---|
-| Frontend | React 19 + TypeScript + Vite | Fast dev server, huge ecosystem, what most companies use day-to-day |
-| Backend | Node.js + Express + TypeScript | Same language as the frontend (one mental model), huge job-market relevance |
+| Frontend | React 19 + TypeScript + Vite | Fast dev server, huge ecosystem |
+| Backend | Node.js + Express + TypeScript | 
 | Database | PostgreSQL 16 | ACID transactions + row-level locking are exactly what concurrency-safety needs |
 | Cache / Locks | Redis 7 | Industry-standard for TTL-based holds and fast ephemeral state |
 | Auth | JWT (jsonwebtoken) + bcrypt | Stateless, simple, standard |
 | Validation | Zod | Type-safe runtime validation, shared mental model with TypeScript |
-| Testing | Jest + Supertest | Standard Node testing stack; includes a **real concurrency test** (see §11) |
+| Testing | Jest + Supertest | Standard Node testing stack, includes a **real concurrency test** (see §11) |
 | Dev environment | Docker Compose (Postgres + Redis only) | Zero manual DB installs — works identically on Windows/Mac/Linux |
 | IDE | VS Code 
 
 ## 4. Setup Instructions (Step by Step)
 
-### Prerequisites (all free)
+### Prerequisites
 - Node.js 20+ (LTS) — https://nodejs.org
 - Docker Desktop (for Postgres + Redis — no manual DB install needed) — https://www.docker.com/products/docker-desktop/
 - Git — https://git-scm.com/
